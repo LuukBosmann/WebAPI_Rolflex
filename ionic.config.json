@@ -1,0 +1,10 @@
+{
+  "name": "weather",
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
+  "type": "angular"
+}

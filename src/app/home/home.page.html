@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+
+
+<ion-content [fullscreen]="true">
+  
+  <ion-card>
+
+    <!-- Input for the order number -->
+    <ion-item lines="none">
+      <ion-label position="floating">Bestelnummer</ion-label>
+      <ion-input type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
+    </ion-item>
+
+    <!-- Button to check the order number -->
+    <ion-item lines="none">
+      <ion-button position="floating" (click)="getBestelnummer(bestelnummer)">Check</ion-button>
+    </ion-item>
+
+  </ion-card>
+
+  <ion-card>
+
+    <ion-item>
+      <ion-label>Bestelling</ion-label>
+    </ion-item>
+
+    <!-- Beneath this are the information on the order -->
+    <ion-item lines="none">
+      <ion-textarea [(ngModel)]="bstlNummer"  placeholder="Vul bestelnummer in" [readonly]="true"></ion-textarea>
+    </ion-item>
+
+    <div *ngIf="bstlNummer">
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="lvrNaam"     [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="lvrTel"      [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="referentie"  [readonly]="true"></ion-textarea>
+      </ion-item>
+    </div>
+
+  </ion-card>
+
+  <!-- Button to show the articles in said order -->
+  <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button>
+
+  <!-- Beneath this are the articles in said order -->
+  <div id="alleArtikels"></div>
+
+</ion-content>
