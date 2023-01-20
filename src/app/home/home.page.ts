@@ -126,6 +126,14 @@ export class HomePage {
     // Empty this so it is clean for reusing
     document.getElementById("alleArtikels").innerHTML = "";
 
+    // If bestelnummer has no "-" in it, add one at the right place
+    if (bestelnummer.indexOf("-") == -1) {
+      bestelnummer = bestelnummer.substring(0, 4) + "-" + bestelnummer.substring(4);
+
+      //rewrite the bestelnummer with the added "-"
+      this.bestelnummer = bestelnummer;
+    }
+
     // Authentication headers
     this.headers = {
       "Content-Type": "application/json",
@@ -184,8 +192,9 @@ export class HomePage {
   }
 
   getRegels( bestelnummer: string) {
-    // Delete the button
-    document.getElementById("buttonRegel").remove();
+    // Make the button invisible
+    var x           = document.getElementById("buttonRegel");
+    x.style.display = "none";
 
     // Authentication headers
     var http        = this.httpClient;
@@ -217,34 +226,42 @@ export class HomePage {
 
       // Then, I put the information in said card
       var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
       var brNummer = this.bestelInfo.Bestelregel[i].BrNummer;
       regel.innerHTML = "<b>BrNummer - " + brNummer + "</b>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
       regel.innerHTML = "Aantal - " + this.bestelInfo.Bestelregel[i].Aantal + "<br/>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
-      regel.lines = "none";
+      regel.style.fontSize = "x-large";
       regel.innerHTML = "Aantal reeds geleverd - " + this.bestelInfo.Bestelregel[i].AantalReedsGeleverd + "<br/>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
       var artikelCode = this.bestelInfo.Bestelregel[i].Artikel_Code;
       regel.innerHTML = "Artikelcode - " + artikelCode + "<br/>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
       regel.innerHTML = "InkoopeenheidOmschrijving - " + this.bestelInfo.Bestelregel[i].InkoopeenheidOmschrijving + "<br/>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
       regel.innerHTML = "Omschrijving - " + this.bestelInfo.Bestelregel[i].Omschrijving;
       document.getElementById("regels" + i).appendChild(regel);
 
       // Create a button to add the amount of articles to the order
       var btnBinnen = document.createElement("ion-button");
+      btnBinnen.style.margin = "10px";
+      btnBinnen.style.height = "50px";
+      btnBinnen.style.fontSize = "x-large";
       btnBinnen.innerHTML = "Aantal in deze bestelling";
       btnBinnen.id = "buttonArtikel" + i;
       btnBinnen.expand = "block";
@@ -256,6 +273,9 @@ export class HomePage {
       // make a button to add the order to the database
       var bstlInfo = bestelInfoPlc;
       var btnBestel = document.createElement("ion-button");
+      btnBestel.style.margin = "10px";
+      btnBestel.style.height = "50px";
+      btnBestel.style.fontSize = "x-large";
       btnBestel.innerHTML = "Bevestig dit artikel";
       btnBestel.id = "buttonBestel" + i;
       btnBestel.expand = "block";
@@ -337,6 +357,7 @@ export class HomePage {
             // Log the results
             console.log('Confirm Ok', alertData);
             var aantal_regel = document.createElement("ion-item");
+            aantal_regel.style.fontSize = "x-large";
             placeholderAantalBinnen = alertData.aantal;
             aantal_regel.id = "aantal_regel" + i;
             aantal_regel.innerHTML = "Aantal in deze bestelling - " + placeholderAantalBinnen + "<br/>";

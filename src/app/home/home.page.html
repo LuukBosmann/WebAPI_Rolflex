@@ -8,15 +8,15 @@
     <!-- Input for the order number -->
     <ion-item style="padding:0px !important;" lines="none" id="testtest">
       <div id="order-input">
-        <ion-label position="floating">Bestelnummer</ion-label>
-        <ion-input type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
+        <ion-label id="bestelnummerLbl" position="floating">Bestelnummer</ion-label>
+        <ion-input id="bestelnummer" type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
       </div>
       
       <ion-button id="order-button" position="floating" (click)="getBestelnummer(bestelnummer)">Check</ion-button>
     </ion-item>
   </ion-card>
 
-  <ion-card id="testing">
+  <ion-card id="orderInformatie">
 
     <ion-item>
       <ion-label>Bestelling</ion-label>
@@ -24,33 +24,26 @@
 
     <!-- Beneath this are the information on the order -->
     <ion-item lines="none">
-      <ion-textarea [(ngModel)]="bstlNummer"  placeholder="Vul bestelnummer in" [readonly]="true"></ion-textarea>
+      <ion-textarea id="bestellingPlaceholder" [(ngModel)]="bstlNummer"  placeholder="Vul bestelnummer in" [readonly]="true"></ion-textarea>
     </ion-item>
 
     <div *ngIf="bstlNummer">
       <ion-item lines="none">
-        <ion-textarea [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
+        <ion-textarea id="bestellingPlc" [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
       </ion-item>
       <ion-item lines="none">
-        <ion-textarea [(ngModel)]="lvrNaam"     [readonly]="true"></ion-textarea>
+        <ion-textarea id="bestellingPlc" [(ngModel)]="lvrNaam"     [readonly]="true"></ion-textarea>
       </ion-item>
       <ion-item lines="none">
-        <ion-textarea [(ngModel)]="lvrTel"      [readonly]="true"></ion-textarea>
+        <ion-textarea id="bestellingPlc" [(ngModel)]="lvrTel"      [readonly]="true"></ion-textarea>
       </ion-item>
       <ion-item lines="none">
-        <ion-textarea [(ngModel)]="referentie"  [readonly]="true"></ion-textarea>
+        <ion-textarea id="bestellingPlc" [(ngModel)]="referentie"  [readonly]="true"></ion-textarea>
       </ion-item>
-      <ion-item></ion-item>
+      <ion-item lines="none"></ion-item>
+      <ion-item lines="none"></ion-item>
 
       <ion-content>
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
-              <ion-img [src]="photo.webviewPath"></ion-img>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
         <ion-fab vertical="bottom" horizontal="center" slot="fixed">
           <ion-fab-button (click)="selectImage()">
             <ion-icon name="camera"></ion-icon>
