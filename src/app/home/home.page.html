@@ -1,0 +1,70 @@
+<ion-header [translucent]="true">
+
+
+<ion-content [fullscreen]="true">
+  
+  <ion-card id="header">
+
+    <!-- Input for the order number -->
+    <ion-item style="padding:0px !important;" lines="none" id="testtest">
+      <div id="order-input">
+        <ion-label position="floating">Bestelnummer</ion-label>
+        <ion-input type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
+      </div>
+      
+      <ion-button id="order-button" position="floating" (click)="getBestelnummer(bestelnummer)">Check</ion-button>
+    </ion-item>
+  </ion-card>
+
+  <ion-card id="testing">
+
+    <ion-item>
+      <ion-label>Bestelling</ion-label>
+    </ion-item>
+
+    <!-- Beneath this are the information on the order -->
+    <ion-item lines="none">
+      <ion-textarea [(ngModel)]="bstlNummer"  placeholder="Vul bestelnummer in" [readonly]="true"></ion-textarea>
+    </ion-item>
+
+    <div *ngIf="bstlNummer">
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="lvrNaam"     [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="lvrTel"      [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-textarea [(ngModel)]="referentie"  [readonly]="true"></ion-textarea>
+      </ion-item>
+      <ion-item></ion-item>
+
+      <ion-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+              <ion-img [src]="photo.webviewPath"></ion-img>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+          <ion-fab-button (click)="selectImage()">
+            <ion-icon name="camera"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ion-content>
+    </div>
+
+  </ion-card>
+
+  <!-- Button to show the articles in said order -->
+  <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button>
+
+  <!-- Beneath this are the articles in said order -->
+  <div id="alleArtikels"></div>
+
+</ion-content>
