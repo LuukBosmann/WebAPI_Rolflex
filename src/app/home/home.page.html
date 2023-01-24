@@ -4,9 +4,11 @@
 <ion-content [fullscreen]="true">
   
   <ion-card id="header">
+    <ion-icon id="backIcon" name="arrow-back" [routerLink]="['/main']"></ion-icon>
 
     <!-- Input for the order number -->
-    <ion-item style="padding:0px !important;" lines="none" id="testtest">
+    <ion-item style="padding:0px !important;" lines="none" id="header">
+
       <div id="order-input">
         <ion-label id="bestelnummerLbl" position="floating">Bestelnummer</ion-label>
         <ion-input id="bestelnummer" type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
@@ -40,11 +42,12 @@
       <ion-item lines="none">
         <ion-textarea id="bestellingPlc" [(ngModel)]="referentie"  [readonly]="true"></ion-textarea>
       </ion-item>
-      <ion-item lines="none"></ion-item>
-      <ion-item lines="none"></ion-item>
+      <ion-item lines="none">
+        <ion-textarea id="cameraLog"></ion-textarea>
+      </ion-item>
 
       <ion-content>
-        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-right: 5%;">
           <ion-fab-button (click)="selectImage()">
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>

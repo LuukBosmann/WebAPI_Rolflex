@@ -80,17 +80,15 @@
   margin: 15px;
 }
 
-#testtest {
-  width: 90%;
+#header {
+  width: 95%;
   margin: 0 auto;
-  padding-left: 16px;
-}
-
-#testtest{
   --padding-end: 0px;
   --inner-padding-end: 0px;
   --inner-padding-start: 0px;
   --padding-start: 0px;
+  display: flex;
+  background-color: #ebebeb;
 }
 
 #bestellingPlc {
@@ -103,4 +101,12 @@
 
 ion-fab-button {
   margin-bottom: 13px;
+}
+
+#backIcon {
+  font-size: 5rem;
+}
+
+#cameraLog {
+  max-height: 35px;
 }

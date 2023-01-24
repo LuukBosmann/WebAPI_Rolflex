@@ -24,3 +24,24 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.my-custom-alert .alert-wrapper {
+    min-width: 90% !important;
+    min-height: auto !important;
+    line-height: 2rem !important;
+}
+
+.my-custom-alert h2 {
+    font-size: 2rem !important;
+}
+
+.my-custom-alert div {
+    font-size: 2rem !important;
+}
+
+.my-custom-alert button {
+    font-size: 2rem !important;
+    margin-top: 20px !important;
+    margin-right: 20px !important;
+    padding-bottom: 20px !important;
+}

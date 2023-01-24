@@ -24,7 +24,6 @@ export class HomePage {
   lvrTel      : any;
   referentie  : any;
   omschrijving: any;
-  bstlAantal  : 0;
 
   headers : any;
 
@@ -66,6 +65,14 @@ export class HomePage {
         console.log("Camera issue:" + err);
       });
 
+      var picCount : number;
+      // make sure the piccount is not overwriten
+      if (picCount == null) {
+        picCount = 0;
+      } else {
+        picCount = picCount;
+      }
+
       // Function to upload the image
       function uploadImage(bestelnummer, pakbon): Promise<string> {
         console.log("sendRequest");
@@ -84,13 +91,27 @@ export class HomePage {
           {
             console.log("request was successful");
             console.log(result);
-            
+
+            var x = document.getElementById("cameraLog");
+            picCount++;
+            if (picCount == 1) {
+              x.innerHTML = "Er is " + picCount + " foto geupload!";
+            } else if (picCount > 1) {
+              x.innerHTML = "Er zijn " + picCount + " foto's geupload!";
+            }
+            x.style.color = "green";
+
             // return auth token from headers
               return result.headers.get("x-auth-token");
           }
           return null;
         }).catch((err: HttpErrorResponse) => 
         {
+
+          var x = document.getElementById("cameraLog");
+          x.innerHTML = "Er is iets fout gegaan!";
+          x.style.color = "red";
+
           console.log(err);
           // If error status code is not 401 (unauthorized) console log error.
           if (err.status !== 401) {
@@ -106,6 +127,7 @@ export class HomePage {
     async selectImage() {
       const actionSheet = await this.actionSheetController.create({
         header: "Select Image source",
+        cssClass: "my-custom-alert",
         buttons: [{
           text: 'Use Camera',
           handler: () => {
@@ -125,6 +147,11 @@ export class HomePage {
   getBestelnummer( bestelnummer: string ) {
     // Empty this so it is clean for reusing
     document.getElementById("alleArtikels").innerHTML = "";
+
+    // check if cameralog exists, if so, empty it
+    if (document.getElementById("cameraLog") != null) {
+      document.getElementById("cameraLog").innerHTML = "";
+    }
 
     // If bestelnummer has no "-" in it, add one at the right place
     if (bestelnummer.indexOf("-") == -1) {
@@ -184,6 +211,7 @@ export class HomePage {
           subHeader : 'Ongeldig bestelnummer',
           message   : 'Vul een geldig bestelnummer in en probeer het opnieuw.',
           buttons   : ['OK'],
+          cssClass  : 'my-custom-alert',
         });
         // Show the alert
         await alert.present();
@@ -200,7 +228,8 @@ export class HomePage {
     var http        = this.httpClient;
     var headersATH  = this.headers;
     var bestelInfoPlc  = this.bestelInfo;
-    var bstlAantalPlc  = this.bstlAantal;
+    var bstlAantalPlc=[];
+    var bstlPalletsPlc=[];
 
     // Clear the HTML
     console.log(this.bestelInfo.Bestelregel.length);
@@ -209,10 +238,10 @@ export class HomePage {
     // Loop through all articles until all are shown
     for (let i = 0; i < this.bestelInfo.Bestelregel.length; i++) {
       // Log the results
-      console.log(i + "] BrNummer "                   + this.bestelInfo.Bestelregel[i].BrNummer);
+      console.log(i + "] Artikel_Code "               + this.bestelInfo.Bestelregel[i].Artikel_Code);
       console.log(i + "] Aantal "                     + this.bestelInfo.Bestelregel[i].Aantal);
       console.log(i + "] AantalReedsGeleverd "        + this.bestelInfo.Bestelregel[i].AantalReedsGeleverd);
-      console.log(i + "] Artikel_Code "               + this.bestelInfo.Bestelregel[i].Artikel_Code);
+      console.log(i + "] BrNummer "                   + this.bestelInfo.Bestelregel[i].BrNummer);
       console.log(i + "] InkoopeenheidOmschrijving "  + this.bestelInfo.Bestelregel[i].InkoopeenheidOmschrijving);
       console.log(i + "] Omschrijving "               + this.bestelInfo.Bestelregel[i].Omschrijving);
 
@@ -227,8 +256,8 @@ export class HomePage {
       // Then, I put the information in said card
       var regel = document.createElement("ion-item");
       regel.style.fontSize = "x-large";
-      var brNummer = this.bestelInfo.Bestelregel[i].BrNummer;
-      regel.innerHTML = "<b>BrNummer - " + brNummer + "</b>";
+      var artikelCode = this.bestelInfo.Bestelregel[i].Artikel_Code;
+      regel.innerHTML = "<b>Artikelcode - " + artikelCode + "</b>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
@@ -243,8 +272,8 @@ export class HomePage {
 
       var regel = document.createElement("ion-item");
       regel.style.fontSize = "x-large";
-      var artikelCode = this.bestelInfo.Bestelregel[i].Artikel_Code;
-      regel.innerHTML = "Artikelcode - " + artikelCode + "<br/>";
+      var brNummer = this.bestelInfo.Bestelregel[i].BrNummer;
+      regel.innerHTML = "BrNummer - " + brNummer + "<br/>";
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
@@ -262,16 +291,17 @@ export class HomePage {
       btnBinnen.style.margin = "10px";
       btnBinnen.style.height = "50px";
       btnBinnen.style.fontSize = "x-large";
-      btnBinnen.innerHTML = "Aantal in deze bestelling";
+      btnBinnen.innerHTML = "Artikel inboeken";
       btnBinnen.id = "buttonArtikel" + i;
       btnBinnen.expand = "block";
       document.getElementById("regels" + i).appendChild(btnBinnen);
       btnBinnen.addEventListener("click", function() {
-        btnBinnenOnClick(i, bestelInfoPlc, bstlAantalPlc)
+        btnBinnenOnClick(i, bestelInfoPlc, bstlAantalPlc[i])
       });
 
       // make a button to add the order to the database
       var bstlInfo = bestelInfoPlc;
+
       var btnBestel = document.createElement("ion-button");
       btnBestel.style.margin = "10px";
       btnBestel.style.height = "50px";
@@ -285,7 +315,8 @@ export class HomePage {
         // ask the user if he is sure
         const alerting    = document.createElement('ion-alert');
         alerting.header   = 'Bevestiging'
-        alerting.message  = 'Weet u zeker dat u dit artikel wilt bestellen?'
+        alerting.message  = 'Weet u zeker dat u dit artikel wilt bevestigen?'
+        alerting.cssClass = 'my-custom-alert'
 
         // yes and no buttons
         alerting.buttons  =
@@ -302,8 +333,9 @@ export class HomePage {
             text: 'Ja',
             handler: () => {
               console.log('Confirm Okay');
+              var aantalArtikelBinnen = bstlAantalPlc[i];
               // send the request
-              sendRequest(bstlInfo.Bestelnummer, bstlInfo.Bestelregel[i].Artikel_Code, bstlInfo.Bestelregel[i].BrNummer, bstlAantalPlc, i)
+              sendRequest(bstlInfo.Bestelnummer, bstlInfo.Bestelregel[i].Artikel_Code, bstlInfo.Bestelregel[i].BrNummer, aantalArtikelBinnen, i)
               // remove the buttons
               document.getElementById("buttonBestel" + i).remove();
               document.getElementById("buttonArtikel" + i).remove();
@@ -316,20 +348,27 @@ export class HomePage {
     }
 
     // Make an eventListener for the button
-    function btnBinnenOnClick(i: number, bestelInfoPlc: any, bstlAantal: any)
+    function btnBinnenOnClick(i: number, bestelInfoPlc: any, bstlAantal: number)
     {
-      var placeholderAantalBinnen: any;
       console.log("btnBinnenOnClick");
+
       const alerting    = document.createElement('ion-alert');
-      alerting.header   = 'Aantal in deze bestelling'
-      alerting.message  = 'Vul de hoeveelheid in'
+      alerting.header   = 'Artikel inboeken'
+      alerting.message  = 'Vul de velden in'
+      alerting.cssClass = 'my-custom-alert'
       // Here we can add the input fields
       alerting.inputs   = 
       [
         {
-          name: 'aantal',
+          name: 'aantalArtikelen',
           type: 'number',
-          placeholder: 'Vul hier het aantal in',
+          placeholder: 'Hoeveel artikelen?',
+          min: 0
+        },
+        {
+          name: 'aantalPallets',
+          type: 'number',
+          placeholder: 'Op hoeveel pallets?',
           min: 0
         }
       ];
@@ -354,14 +393,27 @@ export class HomePage {
               document.getElementById("aantal_regel" + i).remove();
             }
 
+            // if there is already a regel with the amount of pallets, remove it
+            if (document.getElementById("pallets_regel" + i) != null)
+            {
+              document.getElementById("pallets_regel" + i).remove();
+            }
+
             // Log the results
             console.log('Confirm Ok', alertData);
             var aantal_regel = document.createElement("ion-item");
             aantal_regel.style.fontSize = "x-large";
-            placeholderAantalBinnen = alertData.aantal;
+            bstlAantalPlc[i] = alertData.aantalArtikelen;
             aantal_regel.id = "aantal_regel" + i;
-            aantal_regel.innerHTML = "Aantal in deze bestelling - " + placeholderAantalBinnen + "<br/>";
+            aantal_regel.innerHTML = "Aantal in deze bestelling - " + bstlAantalPlc[i] + "<br/>";
             document.getElementById("regels" + i).appendChild(aantal_regel);
+
+            var aantalPallets = document.createElement("ion-item");
+            aantalPallets.style.fontSize = "x-large";
+            bstlPalletsPlc[i] = alertData.aantalPallets;
+            aantalPallets.id = "pallets_regel" + i;
+            aantalPallets.innerHTML = "Aantal pallets - " + bstlPalletsPlc[i] + "<br/>";
+            document.getElementById("regels" + i).appendChild(aantalPallets);
           }
         }
       ];
@@ -369,8 +421,13 @@ export class HomePage {
       return alerting.present();
     }
 
-    function sendRequest(bestelnummer, artikelCode, brNummer, aantal, i): Promise<string> {
+    function sendRequest(bestelnummer: string, artikelCode: string, brNummer: number, aantal: number, i: number): Promise<string> {
       console.log("sendRequest");
+      console.log(bestelnummer);
+      console.log(artikelCode);
+      console.log(brNummer);
+      console.log(aantal);
+      console.log(i);
       // retrieve auth token from headers or return null if login was not successful.
       return http.post(environment.API_URL + "partdelivery", {
         Bestelnummer          : bestelnummer,
