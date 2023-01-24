@@ -5,6 +5,7 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
 import { PhotoService } from '../services/photo.service';
 import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { AnyNsRecord } from 'dns';
 
 const API_URL = environment.API_URL;
 
@@ -38,6 +39,7 @@ export class HomePage {
 
     // Make an empty variable to store the base64 string
     croppedImagepath  = "";
+    picCount          = 0;
 
     // This will be called when the user wants to take a picture
     pickImage(sourceType) {
@@ -58,23 +60,17 @@ export class HomePage {
         // Log it to see the base64 string
         console.log(this.croppedImagepath);
 
+        this.picCount = this.picCount + 1;
+
         // Call the function to upload the image
-        uploadImage(this.bestelnummer, this.croppedImagepath);
+        uploadImage(this.bestelnummer, this.croppedImagepath, this.picCount);
       }, (err) => {
         // Handle error
         console.log("Camera issue:" + err);
       });
 
-      var picCount : number;
-      // make sure the piccount is not overwriten
-      if (picCount == null) {
-        picCount = 0;
-      } else {
-        picCount = picCount;
-      }
-
       // Function to upload the image
-      function uploadImage(bestelnummer, pakbon): Promise<string> {
+      function uploadImage(bestelnummer, pakbon, picCount): Promise<string> {
         console.log("sendRequest");
         // retrieve auth token from headers or return null if login was not successful.
         return http.post(environment.API_URL + "DeliveryNoteImage", {
@@ -93,12 +89,13 @@ export class HomePage {
             console.log(result);
 
             var x = document.getElementById("cameraLog");
-            picCount++;
+
             if (picCount == 1) {
               x.innerHTML = "Er is " + picCount + " foto geupload!";
-            } else if (picCount > 1) {
+            } else {
               x.innerHTML = "Er zijn " + picCount + " foto's geupload!";
             }
+
             x.style.color = "green";
 
             // return auth token from headers
