@@ -4,8 +4,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { PhotoService } from '../services/photo.service';
 import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
-import { File } from '@ionic-native/file/ngx';
-import { AnyNsRecord } from 'dns';
 
 const API_URL = environment.API_URL;
 
@@ -31,7 +29,6 @@ export class HomePage {
   constructor(
     private camera: Camera,
     private alertController: AlertController, 
-    private file: File,
     public actionSheetController: ActionSheetController,
     public photoService: PhotoService, 
     public httpClient:HttpClient
@@ -104,7 +101,6 @@ export class HomePage {
           return null;
         }).catch((err: HttpErrorResponse) => 
         {
-
           var x = document.getElementById("cameraLog");
           x.innerHTML = "Er is iets fout gegaan!";
           x.style.color = "red";
@@ -222,10 +218,10 @@ export class HomePage {
     x.style.display = "none";
 
     // Authentication headers
-    var http        = this.httpClient;
-    var headersATH  = this.headers;
-    var bestelInfoPlc  = this.bestelInfo;
-    var bstlAantalPlc=[];
+    var http          = this.httpClient;
+    var headersATH    = this.headers;
+    var bestelInfoPlc = this.bestelInfo;
+    var bstlAantalPlc =[];
     var bstlPalletsPlc=[];
 
     // Clear the HTML
@@ -331,8 +327,9 @@ export class HomePage {
             handler: () => {
               console.log('Confirm Okay');
               var aantalArtikelBinnen = bstlAantalPlc[i];
+              var aantalPallets = bstlPalletsPlc[i];
               // send the request
-              sendRequest(bstlInfo.Bestelnummer, bstlInfo.Bestelregel[i].Artikel_Code, bstlInfo.Bestelregel[i].BrNummer, aantalArtikelBinnen, i)
+              sendRequest(bstlInfo.Bestelnummer, bstlInfo.Bestelregel[i].Artikel_Code, bstlInfo.Bestelregel[i].BrNummer, aantalArtikelBinnen, aantalPallets, i)
               // remove the buttons
               document.getElementById("buttonBestel" + i).remove();
               document.getElementById("buttonArtikel" + i).remove();
@@ -418,12 +415,13 @@ export class HomePage {
       return alerting.present();
     }
 
-    function sendRequest(bestelnummer: string, artikelCode: string, brNummer: number, aantal: number, i: number): Promise<string> {
+    function sendRequest(bestelnummer: string, artikelCode: string, brNummer: number, aantal: number, aantalPallets: number, i: number): Promise<string> {
       console.log("sendRequest");
       console.log(bestelnummer);
       console.log(artikelCode);
       console.log(brNummer);
       console.log(aantal);
+      console.log(aantalPallets);
       console.log(i);
       // retrieve auth token from headers or return null if login was not successful.
       return http.post(environment.API_URL + "partdelivery", {
@@ -431,6 +429,7 @@ export class HomePage {
         Artikel_Code          : artikelCode,
         BrNummer              : brNummer,
         AantalOntvangen       : aantal,
+        AantalPallets         : aantalPallets,	
         OpmerkingBijOntvangst : "test"
       }, 
       {
