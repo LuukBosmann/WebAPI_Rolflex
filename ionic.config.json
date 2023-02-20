@@ -1,5 +1,5 @@
 {
-  "name": "weather",
+  "name": "RLS voorraad app",
   "integrations": {
     "capacitor": {
       "enabled": false

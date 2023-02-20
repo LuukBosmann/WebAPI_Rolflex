@@ -72,12 +72,12 @@
 }
 
 #orderInformatie {
-  // make a classy styling
   background-color: #ebebeb;
   border: 2px solid #ebebeb;
   border-radius: 5px;
   margin-bottom: 10px;
   margin: 15px;
+  display: none;
 }
 
 #header {
@@ -109,4 +109,18 @@ ion-fab-button {
 
 #cameraLog {
   max-height: 35px;
+}
+
+#bestellingTable {
+  display: none;
+  width: 100%;
+  margin: 5px!important;
+}
+
+#bestellingTable td{
+  padding: 5px!important;
+}
+
+#cameraBtn {
+  display: none;
 }

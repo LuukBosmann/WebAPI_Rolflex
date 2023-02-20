@@ -26,10 +26,29 @@
 
     <!-- Beneath this are the information on the order -->
     <ion-item lines="none">
-      <ion-textarea id="bestellingPlaceholder" [(ngModel)]="bstlNummer"  placeholder="Vul bestelnummer in" [readonly]="true"></ion-textarea>
+
+      <table id="bestellingTable">
+        <tr>
+          <td>Bestelnummer:</td>
+          <td>{{bstlNummer}}</td>
+        </tr>
+        <tr>
+          <td>Besteldatum:</td>
+          <td>{{bstlDatum}}</td>
+        </tr>
+        <tr>
+          <td>Leverancier:</td>
+          <td>{{lvrNaam}}</td>
+        </tr>
+
+
+      </table>
+
+      
+
     </ion-item>
 
-    <div *ngIf="bstlNummer">
+    <!-- <div *ngIf="bstlNummer">
       <ion-item lines="none">
         <ion-textarea id="bestellingPlc" [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
       </ion-item>
@@ -53,10 +72,32 @@
           </ion-fab-button>
         </ion-fab>
       </ion-content>
-    </div>
+    </div> -->
 
   </ion-card>
-
+  <ion-item id="cameraBtn">
+    <ion-content style="height: 65px;">
+      <table>
+        <tr>
+          <td>
+            <ion-fab>
+              <ion-fab-button (click)="selectImage()">
+                <ion-icon name="camera"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <ion-item lines="none">
+                <p id="cameraLog"></p>
+            </ion-item>
+          </td>
+        </tr>
+      </table>
+      
+    </ion-content>
+  </ion-item>
   <!-- Button to show the articles in said order -->
   <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button>
 
