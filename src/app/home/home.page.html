@@ -75,29 +75,32 @@
     </div> -->
 
   </ion-card>
-  <ion-item id="cameraBtn">
-    <ion-content style="height: 65px;">
-      <table>
-        <tr>
-          <td>
-            <ion-fab>
-              <ion-fab-button (click)="selectImage()">
-                <ion-icon name="camera"></ion-icon>
-              </ion-fab-button>
-            </ion-fab>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <ion-item lines="none">
-                <p id="cameraLog"></p>
-            </ion-item>
-          </td>
-        </tr>
-      </table>
-      
-    </ion-content>
-  </ion-item>
+  <ion-card id="cameraBtn">
+    <ion-item>
+      <ion-content style="height: 100px;">
+        <table>
+          <th style="padding-top: 5px;">Foto's van bonnen</th>
+          <tr>
+            <td>
+              <ion-fab>
+                <ion-fab-button (click)="selectImage()">
+                  <ion-icon name="camera"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-item lines="none">
+                  <p id="cameraLog"></p>
+              </ion-item>
+            </td>
+          </tr>
+        </table>
+        
+      </ion-content>
+    </ion-item>
+  </ion-card>  
   <!-- Button to show the articles in said order -->
   <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button>
 

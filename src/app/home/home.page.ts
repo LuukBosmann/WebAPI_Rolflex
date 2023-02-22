@@ -256,6 +256,8 @@ export class HomePage {
     // Make the button invisible
     var x = document.getElementById("buttonRegel");
     x.style.display = "none";
+    var aantalBinnen = [];
+    var aantalPallets = [];
 
     // Authentication headers
     var http = this.httpClient;
@@ -285,36 +287,167 @@ export class HomePage {
       var regel = document.createElement("ion-item");
       regel.style.fontSize = "x-large";
       var artikelCode = this.bestelInfo.Bestelregel[i].Artikel_Code;
-      regel.innerHTML = "<b>Artikelcode " + artikelCode + "</b>";
+      regel.innerHTML = "<b id=\"artikelNummerB\">Artikelcode " + artikelCode + "</b>";
+      document.getElementById("regels" + i).appendChild(regel);
+
+
+
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "aantalBesteld" + i;
+      regel.style.display = "block";
+      
+      document.getElementById("regels" + i).appendChild(regel);
+
+      var vraag = document.createElement("ion-item");
+      vraag.style.fontSize = "x-large";
+      vraag.style.width = "40%";
+      vraag.innerHTML = "Aantal binnen: ";
+      document.getElementById("aantalBesteld" + i).appendChild(vraag);
+
+      var antwoord = document.createElement("ion-item");
+      antwoord.style.fontSize = "x-large";
+      antwoord.innerHTML = this.bestelInfo.Bestelregel[i].Aantal;
+      document.getElementById("aantalBesteld" + i).appendChild(antwoord);
+
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "reedsGeleverd" + i;
+      document.getElementById("regels" + i).appendChild(regel);
+
+      var vraag = document.createElement("ion-item");
+      vraag.style.fontSize = "x-large";
+      vraag.style.width = "40%";
+      vraag.innerHTML = "Reeds geleverd: ";
+      document.getElementById("reedsGeleverd" + i).appendChild(vraag);
+
+      var antwoord = document.createElement("ion-item");
+      antwoord.style.fontSize = "x-large";
+      antwoord.innerHTML = this.bestelInfo.Bestelregel[i].AantalReedsGeleverd;
+      document.getElementById("reedsGeleverd" + i).appendChild(antwoord);
+
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "inkoopeenheid" + i;
+      document.getElementById("regels" + i).appendChild(regel);
+
+      var vraag = document.createElement("ion-item");
+      vraag.style.fontSize = "x-large";
+      vraag.style.width = "40%";
+      vraag.innerHTML = "Eenheid: ";
+      document.getElementById("inkoopeenheid" + i).appendChild(vraag);
+
+      var antwoord = document.createElement("ion-item");
+      antwoord.style.fontSize = "x-large";
+      antwoord.innerHTML = this.bestelInfo.Bestelregel[i].InkoopeenheidOmschrijving;
+      document.getElementById("inkoopeenheid" + i).appendChild(antwoord);
+
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "omschrijving" + i;
+      document.getElementById("regels" + i).appendChild(regel);
+
+      var vraag = document.createElement("ion-item");
+      vraag.style.fontSize = "x-large";
+      vraag.style.width = "40%";
+      vraag.innerHTML = "Omschrijving: ";
+      document.getElementById("omschrijving" + i).appendChild(vraag);
+
+      var antwoord = document.createElement("ion-item");
+      antwoord.style.fontSize = "x-large";
+      antwoord.style.maxWidth = "60%";
+      antwoord.innerHTML = this.bestelInfo.Bestelregel[i].Omschrijving;
+      document.getElementById("omschrijving" + i).appendChild(antwoord);
+
+
+
+
+
+
+      // var regel = document.createElement("ion-item");
+      // regel.style.fontSize = "x-large";
+      // regel.innerHTML =
+      //   "Reeds geleverd: " +
+      //   this.bestelInfo.Bestelregel[i].AantalReedsGeleverd +
+      //   "<br/>";
+      // document.getElementById("regels" + i).appendChild(regel);
+
+      // var regel = document.createElement("ion-item");
+      // regel.style.fontSize = "x-large";
+      // regel.innerHTML =
+      //   "Eenheid: " +
+      //   this.bestelInfo.Bestelregel[i].InkoopeenheidOmschrijving +
+      //   "<br/>";
+      // document.getElementById("regels" + i).appendChild(regel);
+
+      // var regel = document.createElement("ion-item");
+      // regel.style.fontSize = "x-large";
+      // regel.innerHTML =
+      //   "Omschrijving: " + this.bestelInfo.Bestelregel[i].Omschrijving;
+      // document.getElementById("regels" + i).appendChild(regel);
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "regelInputA" + i;
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
       regel.style.fontSize = "x-large";
-      regel.innerHTML =
-        "Aantal besteld: " + this.bestelInfo.Bestelregel[i].Aantal + "<br/>";
+      regel.style.width = "40%";
+      regel.innerHTML = "Aantal ingeboekt: ";
+      document.getElementById("regelInputA" + i).appendChild(regel);
+
+      // Create an input field for the amount of articles
+      var inputAantal = document.createElement("ion-input");
+      inputAantal.style.margin = "10px";
+      inputAantal.style.height = "50px";
+      inputAantal.style.fontSize = "x-large";
+      inputAantal.style.border = "1px solid black";
+      inputAantal.placeholder = "Aantal ingeboekt";
+      inputAantal.id = "inputAantal" + i;
+      inputAantal.type = "number";
+      inputAantal.min = "0";
+      document.getElementById("regelInputA" + i).appendChild(inputAantal);
+
+      var regel = document.createElement("ion-item");
+      regel.style.fontSize = "x-large";
+      regel.id = "regelInputP" + i;
       document.getElementById("regels" + i).appendChild(regel);
 
       var regel = document.createElement("ion-item");
       regel.style.fontSize = "x-large";
-      regel.innerHTML =
-        "Reeds geleverd: " +
-        this.bestelInfo.Bestelregel[i].AantalReedsGeleverd +
-        "<br/>";
-      document.getElementById("regels" + i).appendChild(regel);
+      regel.style.width = "40%";
+      regel.innerHTML = "Aantal pallets: ";
+      regel.id = "regelPallets" + i;
+      document.getElementById("regelInputP" + i).appendChild(regel);
 
-      var regel = document.createElement("ion-item");
-      regel.style.fontSize = "x-large";
-      regel.innerHTML =
-        "Eenheid: " +
-        this.bestelInfo.Bestelregel[i].InkoopeenheidOmschrijving +
-        "<br/>";
-      document.getElementById("regels" + i).appendChild(regel);
+      // Create an input field for the amount of pallets
+      var inputPallets = document.createElement("ion-input");
+      inputPallets.style.margin = "10px";
+      inputPallets.style.height = "50px";
+      inputPallets.style.fontSize = "x-large";
+      inputPallets.style.border = "1px solid black";
+      inputPallets.placeholder = "Aantal pallets";
+      inputPallets.id = "inputPallets" + i;
+      inputPallets.type = "number";
+      inputPallets.min = "0";
+      document.getElementById("regelInputP" + i).appendChild(inputPallets);
 
-      var regel = document.createElement("ion-item");
-      regel.style.fontSize = "x-large";
-      regel.innerHTML =
-        "Omschrijving: " + this.bestelInfo.Bestelregel[i].Omschrijving;
-      document.getElementById("regels" + i).appendChild(regel);
+      // When typing in the input field, store the value in a variable
+      inputAantal.addEventListener("keyup", function() {
+        aantalBinnen[i] = (<HTMLInputElement>document.getElementById("inputAantal" + i)).value;
+        console.log(aantalBinnen[i]);
+      });
+
+      inputPallets.addEventListener("keyup", function() {
+        aantalPallets[i] = (<HTMLInputElement>document.getElementById("inputPallets" + i)).value;
+        console.log(aantalPallets[i]);
+      });
+
 
       //
 
@@ -329,18 +462,18 @@ export class HomePage {
       //   console.log(aantalPalletsBinnen);
       // });
 
-      // Create a button to add the amount of articles to the order
-      var btnBinnen = document.createElement("ion-button");
-      btnBinnen.style.margin = "10px";
-      btnBinnen.style.height = "50px";
-      btnBinnen.style.fontSize = "x-large";
-      btnBinnen.innerHTML = "Artikel inboeken";
-      btnBinnen.id = "buttonArtikel" + i;
-      btnBinnen.expand = "block";
-      document.getElementById("regels" + i).appendChild(btnBinnen);
-      btnBinnen.addEventListener("click", function () {
-        btnBinnenOnClick(i, bestelInfoPlc, bstlAantalPlc[i], bstlPalletsPlc[i]);
-      });
+      // // Create a button to add the amount of articles to the order
+      // var btnBinnen = document.createElement("ion-button");
+      // btnBinnen.style.margin = "10px";
+      // btnBinnen.style.height = "50px";
+      // btnBinnen.style.fontSize = "x-large";
+      // btnBinnen.innerHTML = "Artikel inboeken";
+      // btnBinnen.id = "buttonArtikel" + i;
+      // btnBinnen.expand = "block";
+      // document.getElementById("regels" + i).appendChild(btnBinnen);
+      // btnBinnen.addEventListener("click", function () {
+      //   btnBinnenOnClick(i, bestelInfoPlc, bstlAantalPlc[i], bstlPalletsPlc[i]);
+      // });
 
       if (i == this.bestelInfo.Bestelregel.length - 1) {
         // make a button to add the order to the database
@@ -360,18 +493,18 @@ export class HomePage {
         btnBestel.addEventListener("click", function () {
           // check if the user has entered a valid amount
           if (
-            bstlAantalPlc.includes(undefined) ||
-            bstlPalletsPlc.includes(undefined) ||
-            bstlAantalPlc.includes("") ||
-            bstlPalletsPlc.includes("") ||
-            bstlAantalPlc.length == 0 ||
-            bstlPalletsPlc.length == 0 ||
-            bstlAantalPlc.length != bstlPalletsPlc.length ||
-            bstlPalletsPlc.length != bstlAantalPlc.length ||
-            bstlAantalPlc.length != checkLength ||
-            bstlPalletsPlc.length != checkLength ||
-            bstlAantalPlc.length != bstlPalletsPlc.length ||
-            bstlPalletsPlc.length != bstlAantalPlc.length
+            aantalBinnen.includes(undefined) ||
+            aantalPallets.includes(undefined) ||
+            aantalBinnen.includes("") ||
+            aantalPallets.includes("") ||
+            aantalBinnen.length == 0 ||
+            aantalPallets.length == 0 ||
+            aantalBinnen.length != aantalPallets.length ||
+            aantalPallets.length != aantalBinnen.length ||
+            aantalBinnen.length != checkLength ||
+            aantalPallets.length != checkLength ||
+            aantalBinnen.length != aantalPallets.length ||
+            aantalPallets.length != aantalBinnen.length
           ) {
             // if not, show an alert
             const alert = document.createElement("ion-alert");
@@ -405,14 +538,12 @@ export class HomePage {
               text: "Ja",
               handler: () => {
                 console.log("Confirm Okay");
-                var aantalArtikelBinnen = bstlAantalPlc[i];
-                var aantalPalletsBinnen = bstlPalletsPlc[i];
                 // send the request
                 sendRequest(
                   bstlInfo.Bestelnummer,
                   bstlInfo,
-                  bstlAantalPlc,
-                  bstlPalletsPlc
+                  aantalBinnen,
+                  aantalPallets
                 );
                 // remove the buttons
                 //document.getElementById("buttonBestel" + i).remove();
