@@ -119,6 +119,10 @@ export class HomePage {
 
             x.style.color = "green";
 
+            // show button
+            var y = document.getElementById("buttonBestel");
+            y.style.display = "block";
+
             // return auth token from headers
             return result.headers.get("x-auth-token");
           }
@@ -494,43 +498,44 @@ export class HomePage {
               var bstlInfo = bestelInfoPlc;
 
               var btnBestel = document.createElement("ion-button");
-              btnBestel.style.margin = "10px";
+              btnBestel.style.margin = "15px";
               btnBestel.style.height = "50px";
               btnBestel.style.fontSize = "x-large";
               btnBestel.innerHTML = "Bevestig alle artikelen";
               btnBestel.id = "buttonBestel";
               btnBestel.expand = "block";
+              btnBestel.style.display = "none";
 
               var checkLength = this.bestelInfo.Bestelregel.length;
 
               document.getElementById("alleArtikels").appendChild(btnBestel);
               btnBestel.addEventListener("click", function () {
-                // check if the user has entered a valid amount
-                if (
-                  aantalBinnen.includes(undefined) ||
-                  aantalPallets.includes(undefined) ||
-                  aantalBinnen.includes("") ||
-                  aantalPallets.includes("") ||
-                  aantalBinnen.length == 0 ||
-                  aantalPallets.length == 0 ||
-                  aantalBinnen.length != aantalPallets.length ||
-                  aantalPallets.length != aantalBinnen.length ||
-                  aantalBinnen.length != checkLength ||
-                  aantalPallets.length != checkLength ||
-                  aantalBinnen.length != aantalPallets.length ||
-                  aantalPallets.length != aantalBinnen.length
-                ) {
-                  // if not, show an alert
-                  const alert = document.createElement("ion-alert");
-                  alert.cssClass = "my-custom-alert";
-                  alert.header = "Fout";
-                  alert.message =
-                    "U heeft geen geldig aantal ingevoerd. Check uw invoer en probeer het opnieuw.";
-                  alert.buttons = ["OK"];
+                // // check if the user has entered a valid amount
+                // if (
+                //   aantalBinnen.includes(undefined) ||
+                //   aantalPallets.includes(undefined) ||
+                //   aantalBinnen.includes("") ||
+                //   aantalPallets.includes("") ||
+                //   aantalBinnen.length == 0 ||
+                //   aantalPallets.length == 0 ||
+                //   aantalBinnen.length != aantalPallets.length ||
+                //   aantalPallets.length != aantalBinnen.length ||
+                //   aantalBinnen.length != checkLength ||
+                //   aantalPallets.length != checkLength ||
+                //   aantalBinnen.length != aantalPallets.length ||
+                //   aantalPallets.length != aantalBinnen.length
+                // ) {
+                //   // if not, show an alert
+                //   const alert = document.createElement("ion-alert");
+                //   alert.cssClass = "my-custom-alert";
+                //   alert.header = "LET OP!";
+                //   alert.message =
+                //     "U heeft niet alle velden ingevuld of u heeft een ongeldige waarde ingevoerd.<br>Controleer uw invoer en probeer het opnieuw.";
+                //   alert.buttons = ["OK"];                  
 
-                  document.body.appendChild(alert);
-                  return alert.present();
-                }
+                //   document.body.appendChild(alert);
+                //   return alert.present();
+                // }
 
                 // if aantalBinnen[i] is 0, aantalPallets[i] cannot be higher than 0
                 for (var i = 0; i < aantalBinnen.length; i++) {
@@ -546,6 +551,8 @@ export class HomePage {
                       artNummer +
                       " en probeer het opnieuw.";
                     alert.buttons = ["OK"];
+
+                    
 
                     document.body.appendChild(alert);
                     return alert.present();
@@ -739,10 +746,38 @@ export class HomePage {
             //: Promise<string>
             console.log(bstlInfo);
 
+            var emptyCounter = 0;
+
+            for (var i = 0; i < bestelInfo.Bestelregel.length; i++) {
+            //change all undefined values to 0
+            if (bstlAantalPlc[i] == undefined) {
+              bstlAantalPlc[i] = 0;
+              emptyCounter++;
+            }
+            if (bstlPalletsPlc[i] == undefined) {
+              bstlPalletsPlc[i] = 0;
+              emptyCounter++;
+            }
+            }
+
+            if(emptyCounter > 0){
+              const alert = document.createElement("ion-alert");
+              alert.cssClass = "my-custom-alert";
+              alert.header = "LET OP!";
+              alert.message =
+                "Er waren " + emptyCounter + " lege velden gevonden. Deze zijn automatisch op 0 gezet.<br><br>Wanneer u opnieuw op bevestigen klikt, wordt de bestelling verstuurd.";
+              alert.buttons = ["OK"];                  
+
+              document.body.appendChild(alert);
+              return alert.present();
+            }
+
             // delete the button
 
             // create a log that shows all data of all articles
             for (var i = 0; i < bestelInfo.Bestelregel.length; i++) {
+              
+
               console.log(
                 "----------------------------------------------------"
               );
@@ -780,9 +815,24 @@ export class HomePage {
 
               delete bestelregelUpdated[i].Aantal;
               delete bestelregelUpdated[i].AantalReedsGeleverd;
+
+              if(bestelregelUpdated[i].AantalOntvangen == 0){
+                // remove the article from the array
+                delete bestelregelUpdated[i];
+
+              }
             }
 
             console.log(bestelregelUpdated);
+
+            // create a new array with the updated bestelregel
+            var bestelregelUpdated2 = [];
+            for (var i = 0; i < bestelregelUpdated.length; i++) {
+              if (bestelregelUpdated[i] != undefined && bestelregelUpdated[i] != null) {
+                bestelregelUpdated2.push(bestelregelUpdated[i]);
+              }
+            }
+
 
             // retrieve auth token from headers or return null if login was not successful.
             return http
@@ -790,7 +840,7 @@ export class HomePage {
                 environment.API_URL + "partdelivery",
                 {
                   Bestelnummer: bestelnummer,
-                  Bestelregel: bestelInfo.Bestelregel,
+                  Bestelregel: bestelregelUpdated2,
                   // Artikel_Code          : artikelCode,
                   // BrNummer              : brNummer,
                   // AantalOntvangen       : aantal,
