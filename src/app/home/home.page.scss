@@ -60,6 +60,39 @@
   margin: 0;
 }
 
+#bestelnummerInput {
+  width: 100%;
+  padding-left: 15px;
+  padding-bottom: 7px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+#bestelnummerDeel1 {
+  max-width: 25%;
+  padding-left: 15px;
+  padding-bottom: 7px;
+  margin: 0;
+  display: inline-block;
+}
+
+#bestelnummerDeel2 {
+  max-width: 35%;
+  padding-left: 15px;
+  padding-bottom: 7px;
+  margin: 0;
+  display: inline-block;
+}
+
+#bestelnummerDash {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 7px;
+  margin: 0;
+  display: inline-block;
+}
+
 #order-button {
   width: 25%;
   position: absolute;
@@ -123,5 +156,6 @@ ion-fab-button {
 
 #cameraBtn {
   display: none;
-  height: 100px!important;
+  height: 105px!important;
 }
+

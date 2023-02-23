@@ -1,54 +1,69 @@
 <ion-header [translucent]="true">
+  <ion-content [fullscreen]="true">
+    <ion-card id="header">
+      <ion-icon
+        id="backIcon"
+        name="arrow-back"
+        [routerLink]="['/main']"
+      ></ion-icon>
 
+      <!-- Input for the order number -->
+      <ion-item style="padding:0px !important;" lines="none" id="header">
+        <div id="order-input">
+          <ion-label id="bestelnummerLbl">Bestelnummer</ion-label>
+          <!-- <ion-input id="bestelnummer" type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input> -->
+          <div id="bestelnummerInput">
+            <ion-input
+              id="bestelnummerDeel1"
+              type="tel"
+              maxlength="4"
+              [(ngModel)]="bestelnummerDeel1"
+              placeholder="XXXX"
+            ></ion-input>
+            <ion-label id="bestelnummerDash">-</ion-label>
+            <ion-input
+              id="bestelnummerDeel2"
+              type="tel"
+              maxlength="6"
+              [(ngModel)]="bestelnummerDeel2"
+              placeholder="XXXXXX"
+            ></ion-input>
+          </div>
+        </div>
 
-<ion-content [fullscreen]="true">
-  
-  <ion-card id="header">
-    <ion-icon id="backIcon" name="arrow-back" [routerLink]="['/main']"></ion-icon>
+        <ion-button
+          id="order-button"
+          position="floating"
+          (click)="getBestelnummer(bestelnummerDeel1, bestelnummerDeel2)"
+          >Check
+        </ion-button>
+      </ion-item>
+    </ion-card>
 
-    <!-- Input for the order number -->
-    <ion-item style="padding:0px !important;" lines="none" id="header">
+    <ion-card id="orderInformatie">
+      <ion-item>
+        <ion-label>Bestelling</ion-label>
+      </ion-item>
 
-      <div id="order-input">
-        <ion-label id="bestelnummerLbl" position="floating">Bestelnummer</ion-label>
-        <ion-input id="bestelnummer" type="text" [(ngModel)]="bestelnummer" placeholder="Bestelnummer"></ion-input>
-      </div>
-      
-      <ion-button id="order-button" position="floating" (click)="getBestelnummer(bestelnummer)">Check</ion-button>
-    </ion-item>
-  </ion-card>
+      <!-- Beneath this are the information on the order -->
+      <ion-item lines="none">
+        <table id="bestellingTable">
+          <tr>
+            <td>Bestelnummer:</td>
+            <td>{{bstlNummer}}</td>
+          </tr>
+          <tr>
+            <td>Besteldatum:</td>
+            <td>{{bstlDatum}}</td>
+          </tr>
+          <tr>
+            <td>Leverancier:</td>
+            <td>{{lvrNaam}}</td>
+          </tr>
+        </table>
+      </ion-item>
 
-  <ion-card id="orderInformatie">
-
-    <ion-item>
-      <ion-label>Bestelling</ion-label>
-    </ion-item>
-
-    <!-- Beneath this are the information on the order -->
-    <ion-item lines="none">
-
-      <table id="bestellingTable">
-        <tr>
-          <td>Bestelnummer:</td>
-          <td>{{bstlNummer}}</td>
-        </tr>
-        <tr>
-          <td>Besteldatum:</td>
-          <td>{{bstlDatum}}</td>
-        </tr>
-        <tr>
-          <td>Leverancier:</td>
-          <td>{{lvrNaam}}</td>
-        </tr>
-
-
-      </table>
-
-      
-
-    </ion-item>
-
-    <!-- <div *ngIf="bstlNummer">
+      <!-- <div *ngIf="bstlNummer">
       <ion-item lines="none">
         <ion-textarea id="bestellingPlc" [(ngModel)]="bstlDatum"   [readonly]="true"></ion-textarea>
       </ion-item>
@@ -73,38 +88,38 @@
         </ion-fab>
       </ion-content>
     </div> -->
-
-  </ion-card>
-  <ion-card id="cameraBtn">
-    <ion-item>
-      <ion-content style="height: 100px;">
-        <table>
-          <th style="padding-top: 5px;">Foto's van bonnen</th>
-          <tr>
-            <td>
-              <ion-fab>
-                <ion-fab-button (click)="selectImage()">
-                  <ion-icon name="camera"></ion-icon>
-                </ion-fab-button>
-              </ion-fab>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <ion-item lines="none">
+    </ion-card>
+    <ion-card id="cameraBtn">
+      <ion-item>
+        <ion-content style="height: 105px;">
+          <table>
+            <th style="padding-top: 5px;" id="cameraLogTH">
+              Foto's van bonnen
+            </th>
+            <tr>
+              <td>
+                <ion-fab>
+                  <ion-fab-button (click)="selectImage()">
+                    <ion-icon name="camera"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ion-item lines="none">
                   <p id="cameraLog"></p>
-              </ion-item>
-            </td>
-          </tr>
-        </table>
-        
-      </ion-content>
-    </ion-item>
-  </ion-card>  
-  <!-- Button to show the articles in said order -->
-  <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button>
+                </ion-item>
+              </td>
+            </tr>
+          </table>
+        </ion-content>
+      </ion-item>
+    </ion-card>
+    <!-- Button to show the articles in said order -->
+    <!-- <ion-button id="buttonRegel" expand="block" (click)="getRegels(bestelnummer)">Laat artikelen zien</ion-button> -->
 
-  <!-- Beneath this are the articles in said order -->
-  <div id="alleArtikels"></div>
-
-</ion-content>
+    <!-- Beneath this are the articles in said order -->
+    <div id="alleArtikels"></div> 
+  </ion-content>
+</ion-header>
