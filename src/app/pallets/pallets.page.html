@@ -3,8 +3,13 @@
       <ion-row>
           <ion-col>
               <ion-card>
-                  <ion-card-content>
-                      <ion-button expand="block" (click)="scanBarcode()">Scan QR Code</ion-button>
+                  <ion-card-content id="imTrying">
+                    <ion-icon
+                    id="backIcon"
+                    name="arrow-back"
+                    [routerLink]="['/main']"
+                    ></ion-icon>
+                      <ion-button id="scanButton" expand="block" (click)="scanBarcode()">Scan QR Code</ion-button>
                   </ion-card-content>
               </ion-card>
           </ion-col>
@@ -24,4 +29,56 @@
         </tr>
     </table>
   </ion-card>
+
+  <ion-card id="magazijnLocatie">
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Stelling</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="stelling">
+                        <ion-select-option *ngFor="let stelling of stellingen" [value]="stelling">{{stelling}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Vak</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="vak">
+                        <ion-select-option *ngFor="let vak of vakken" [value]="vak">{{vak}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Positie</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="positie">
+                        <ion-select-option *ngFor="let positie of posities" [value]="positie">{{positie}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Schap</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="schap">
+                        <ion-select-option *ngFor="let schap of schappen" [value]="schap">{{schap}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+
+  </ion-card>
+
+    <ion-card id="sendDataCard">
+        <ion-card-content>
+            <ion-button expand="block" (click)="sendData()">Versturen</ion-button>
+        </ion-card-content>
+    </ion-card>
+    <ion-card id="dataRecievedCard">
+        <ion-card-content>
+            De gegevens zijn succesvol verstuurd.
+        </ion-card-content>
+    </ion-card>
 </ion-content>

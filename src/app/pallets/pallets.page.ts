@@ -1,130 +1,212 @@
-import { Component, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
-import { BarcodeScanner, BarcodeScannerOptions } from '@awesome-cordova-plugins/barcode-scanner/ngx';
-import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
-import { appendFile } from 'fs';
+import { Component, OnInit } from "@angular/core";
+import { Platform } from "@ionic/angular";
+import { environment } from "../../environments/environment";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from "@angular/common/http";
+import {
+  BarcodeScanner,
+  BarcodeScannerOptions,
+} from "@awesome-cordova-plugins/barcode-scanner/ngx";
+import { Camera, CameraOptions } from "@ionic-native/Camera/ngx";
+import { appendFile } from "fs";
+
+const API_URL = environment.API_URL;
 
 @Component({
-  selector: 'app-pallets',
-  templateUrl: './pallets.page.html',
-  styleUrls: ['./pallets.page.scss'],
+  selector: "app-pallets",
+  templateUrl: "./pallets.page.html",
+  styleUrls: ["./pallets.page.scss"],
 })
 export class PalletsPage implements OnInit {
   scannedData: any;
-  encodedData: '';
+  encodedData: "";
   encodeData: any;
   inputData: any;
+
+  headers: any;
 
   bestelnummer: any;
   artikelCode: any;
   palletNr: any;
+  brNummer: any;
+
+  stelling: any;
+  vak: any;
+  positie: any;
+  schap: any;
+  // stellingen: any;
+  // vakken: any;
+  // posities: any;
+  // schappen: any;
 
   constructor(
     private barcodeScanner: BarcodeScanner,
     private camera: Camera,
-    private platform: Platform,) {
-  }
+    public httpClient: HttpClient,
+    private platform: Platform
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   scanBarcode() {
     const options: BarcodeScannerOptions = {
       preferFrontCamera: false,
       torchOn: false,
-      prompt: '',
+      prompt: "",
       resultDisplayDuration: 500,
-      formats: 'EAN_13,EAN_8,QR_CODE,PDF_417 ',
-      orientation: 'portrait',
+      formats: "EAN_13,EAN_8,QR_CODE,PDF_417 ",
+      orientation: "portrait",
     };
 
-    this.barcodeScanner.scan(options).then(barcodeData => {
-      console.log('QR code data', barcodeData);
-      this.scannedData = barcodeData;
+    this.barcodeScanner
+      .scan(options)
+      .then((barcodeData) => {
+        console.log("QR code data", barcodeData);
+        this.scannedData = barcodeData;
 
-      var text = this.scannedData.text;
-      var bestelnummer = text.substring(0, text.indexOf('|'));
-      this.bestelnummer = bestelnummer;
+        var text = this.scannedData.text;
 
-      // parse text to get the text between the first and second |
-      var artikelCode = text.substring(text.indexOf('|') + 1, text.lastIndexOf('|'));
-      this.artikelCode = artikelCode;
+        var positie1 = getPosition(text, "|", 1);
+        var positie2 = getPosition(text, "|", 2);
+        var positie3 = getPosition(text, "|", 3);
+        var positie4 = getPosition(text, "|", 4);
 
-      // parse text to get the text before the last | and after the second to last |
-      var palletNr = text.substring(text.lastIndexOf('|') + 1, text.lastIndexOf('|') + 2);
-      this.palletNr = palletNr;
+        var bestelnummer = text.substring(0, positie1);
+        this.bestelnummer = bestelnummer;
 
-      // show the div pastecard
-      document.getElementById('pasteCard').style.display = 'block';
+        var artikelCode = text.substring(positie1 + 1, positie2);
+        this.artikelCode = artikelCode;
 
-      //printData(this.scannedData, this.bestelnummer, this.artikelCode, this.palletNr);
+        var brNummer = text.substring(positie2 + 1, positie3);
+        this.brNummer = brNummer;
 
-    }).catch(err => {
-      console.log('Error', err);
-    });
+        var palletNr = text.substring(positie3 + 1, positie4);
+        this.palletNr = palletNr;
+
+        // show the divs
+        document.getElementById("pasteCard").style.display = "block";
+        document.getElementById("sendDataCard").style.display = "block";
+        document.getElementById("dataRecievedCard").style.display = "none";
+
+        //printData(this.scannedData, this.bestelnummer, this.artikelCode, this.palletNr);
+
+        this.makeInput();
+      })
+      .catch((err) => {
+        console.log("Error", err);
+      });
   }
 
   createBarcode() {
-    this.barcodeScanner.encode(this.barcodeScanner.Encode.TEXT_TYPE, this.inputData).then((encodedData) => {
-      console.log(encodedData);
-      this.encodedData = encodedData;
-    }, (err) => {
-      console.log('Error occured : ' + err);
-    });
+    this.barcodeScanner
+      .encode(this.barcodeScanner.Encode.TEXT_TYPE, this.inputData)
+      .then(
+        (encodedData) => {
+          console.log(encodedData);
+          this.encodedData = encodedData;
+        },
+        (err) => {
+          console.log("Error occured : " + err);
+        }
+      );
+  }
+
+  stellingen = ["SP", "AA", "AB", "BA", "BB", "BC", "LM"];
+
+  vakken = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+  posities = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+
+  schappen = ["1", "2", "3", "4", "5"];
+
+  makeInput() {
+    // show the magazijnLocatie id
+    document.getElementById("magazijnLocatie").style.display = "block";
+
+    this.headers = {
+      "Content-Type": "application/json",
+    };
+    this.headers["refresh-cache"] = "1";
+    this.headers["X-Auth-Token"] =
+      "Engineer|2|132254573446463639|YuEdXWXAxw1m87wnoDeukg==|SHA512:B40doiwaNItg9mlrc6gUZZ5/F5o4Wl9fXk8srdD4WHVvSUvg3YXhCh+7N/vy0xUnAu8tBVOdnbb1427s5w5TVg==";
+  }
+
+  sendData() {
+    // Authentication headers
+    var http = this.httpClient;
+    var headersATH = this.headers;
+
+    //complete log
+    console.log("Bestelnummer: " + this.bestelnummer);
+    console.log("Artikel_Code: " + this.artikelCode);
+    console.log("BrNummer: " + this.brNummer);
+    console.log("PalletNr: " + this.palletNr);
+    console.log("LocatieCodeA: " + this.stelling);
+    console.log("LocatieCodeB: " + this.vak);
+    console.log("LocatieCodeC: " + this.positie);
+    console.log("LocatieCodeD: " + this.schap);
+    console.log("ModifiedBy: Tablet");
+
+    // retrieve auth token from headers or return null if login was not successful.
+    return http
+      .post(
+        environment.API_URL + "setWarehouseLocation",
+        {
+          Bestelnummer: this.bestelnummer,
+          Artikel_Code: this.artikelCode,
+          BrNummer: this.brNummer,
+          PalletNr: this.palletNr,
+          LocatieCodeA: this.stelling,
+          LocatieCodeB: this.vak,
+          LocatieCodeC: this.positie,
+          LocatieCodeD: this.schap,
+          ModifiedBy: "Tablet",
+        },
+        {
+          observe: "response",
+          headers: new HttpHeaders(headersATH),
+        }
+      )
+      .toPromise()
+      .then((result: HttpResponse<any>) => {
+        // request was successful, check for status code 200 (OK)
+        if (result.status === 200) {
+          console.log("request was successful");
+          console.log(result);
+
+          var confirm = document.getElementById("sendDataCard");
+          confirm.style.display = "none";
+
+          var confirm = document.getElementById("dataRecievedCard");
+          confirm.style.display = "block";
+
+          var p = document.getElementsByTagName("ion-input");
+          for (var i = 2; i < p.length; i++) {
+            p.item(i).readonly = true;
+          }
+
+          // return auth token from headers
+          return result.headers.get("x-auth-token");
+        }
+        return null;
+      })
+      .catch((err: HttpErrorResponse) => {
+        console.log(err);
+        // If error status code is not 401 (unauthorized) console log error.
+        if (err.status !== 401) {
+          console.error("Error whilst trying to login: ", err);
+        }
+        return null;
+      });
   }
 }
-// function printData(scannedData: any, bestelnummer: any, artikelCode: any, palletNr: any) {
+function getPosition(string, subString, index) {
+  var newstring = string.split(subString, index).join(subString).length;
+  console.log(newstring);
 
-//   var text = scannedData.text;
-//   // parse text to get the text before the first |
-//   var textBefore = text.substring(0, text.indexOf('|'));
-//   bestelnummer = textBefore;
-//   // // append it in the table
-//   // table.appendChild(th);
-
-//   // create a table row element
-//   const trAC = document.createElement('tr');
-//   trAC.id = 'pasteTr';
-//   // // append it in the table
-//   // table.appendChild(trAC);
-
-//   const tdAC1 = document.createElement('td');
-//   tdAC1.id = 'pasteTd';
-//   const tdAC2 = document.createElement('td');
-//   tdAC2.id = 'pasteTd';
-
-//   var text = scannedData.text;
-//   // parse text to get the text between the first and second |
-//   var textBetween = text.substring(text.indexOf('|') + 1, text.lastIndexOf('|'));
-
-//   tdAC1.innerHTML = 'Artikel-code: ';
-//   tdAC2.innerHTML = textBetween;
-//   // // append it in the table
-//   // trAC.appendChild(tdAC1);
-//   // trAC.appendChild(tdAC2);
-
-//   // create a table row element
-//   const trPN = document.createElement('tr');
-//   trPN.id = 'pasteTr';
-//   // // append it in the table
-//   // table.appendChild(trPN);
-
-//   // create a table data element
-//   const tdPN1 = document.createElement('td');
-//   tdPN1.id = 'pasteTd';
-//   const tdPN2 = document.createElement('td');
-//   tdPN2.id = 'pasteTd';
-//   var text = scannedData.text;
-//   // parse text to get the text before the last | and after the second to last |
-//   var textAfter = text.substring(text.lastIndexOf('|') + 1, text.lastIndexOf('|') + 2);
-//   tdPN1.innerHTML = 'Pallet nr: ';
-//   tdPN2.innerHTML = textAfter;
-//   // // append it in the table
-//   // trPN.appendChild(tdPN1);
-//   // trPN.appendChild(tdPN2);
-
-//   //append it in paste div
-//   document.getElementById('pasteDiv').appendChild(table);
-//   document.getElementById('pasteDiv').appendChild(card);
-// }
-
+  return newstring;
+}
