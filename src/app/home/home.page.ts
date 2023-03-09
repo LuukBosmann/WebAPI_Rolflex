@@ -189,7 +189,7 @@ export class HomePage {
     }
 
     document.getElementById("cameraLogTH").innerHTML =
-      "Upload een foto om het in te kunnen vullen";
+      "Maak tenminste één foto";        // MOD LE20230309
 
     // if cameraBtn is visible, hide it
     if (document.getElementById("cameraBtn") != null) {
@@ -407,7 +407,7 @@ export class HomePage {
             var regel = document.createElement("ion-item");
             regel.style.fontSize = "x-large";
             regel.style.width = "40%";
-            regel.innerHTML = "Aantal ingeboekt: ";
+            regel.innerHTML = "Aantal ontvangen:";
             document.getElementById("regelInputA" + i).appendChild(regel);
 
             // Create an input field for the amount of articles
@@ -417,8 +417,8 @@ export class HomePage {
             inputAantal.style.fontSize = "x-large";
             inputAantal.style.border = "1px solid black";
             inputAantal.style.borderRadius = "5px";
-            inputAantal.readonly = true;
-            inputAantal.placeholder = "Aantal ingeboekt";
+            inputAantal.readonly = true;               
+            inputAantal.placeholder = "Aantal ontvangen";
             inputAantal.id = "inputAantal" + i;
             inputAantal.type = "number";
             inputAantal.min = "0";
@@ -443,7 +443,7 @@ export class HomePage {
             inputPallets.style.fontSize = "x-large";
             inputPallets.style.border = "1px solid black";
             inputPallets.style.borderRadius = "5px";
-            inputPallets.readonly = true;
+            inputPallets.readonly = true;                 
             inputPallets.placeholder = "Aantal pallets";
             inputPallets.id = "inputPallets" + i;
             inputPallets.type = "number";
@@ -505,6 +505,7 @@ export class HomePage {
               btnBestel.id = "buttonBestel";
               btnBestel.expand = "block";
               btnBestel.style.display = "none";
+              //btnBestel.style.display = "block";         // MOD LAURENS
 
               var checkLength = this.bestelInfo.Bestelregel.length;
 
@@ -617,8 +618,8 @@ export class HomePage {
                       // console.log("Aantal: " + aantalArtikelBinnen);
                       // console.log("Pallets: " + aantalPalletsBinnen);
                       // console.log("i: " + i);
-                      // console.log("bstlAantalPlc: " + bstlAantalPlc);
-                      // console.log("bstlPalletsPlc: " + bstlPalletsPlc);
+                      console.log("bstlAantalPlc: " + bstlAantalPlc);
+                      console.log("bstlPalletsPlc: " + bstlPalletsPlc);
                     },
                   },
                 ];
@@ -684,7 +685,7 @@ export class HomePage {
                   var regel = document.createElement("ion-item");
                   regel.id = "aantalInput" + i;
                   regel.style.fontSize = "x-large";
-                  regel.innerHTML = "Aantal ingeboekt: ";
+                  regel.innerHTML = "Aantal ontvangen: ";
                   document.getElementById("regels" + i).appendChild(regel);
 
                   // Create a text input to add the amount of articles to the order
